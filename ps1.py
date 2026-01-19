@@ -107,7 +107,7 @@ print("\ny_train: \n", y_train)
 print("\ny_test: \n", y_test)
 
 #Q4c
-np.random.seed(0)
+np.random.seed(0) #line to create reproducibility
 indices = np.random.permutation(10)
 train = indices[:8]
 test = indices[8:]
