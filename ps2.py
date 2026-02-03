@@ -4,6 +4,7 @@ from computeCost import computeCost
 from gradientDescent import gradientDescent
 from normalEqn import normalEqn
 import pandas as pd
+import time
 
 # D = 32
 
@@ -32,7 +33,7 @@ plt.figure(figsize=(10, 6))
 plt.plot(range(num_iters), cost_history, linewidth=2)
 plt.xlabel('Iteration number')
 plt.ylabel('Cost')
-plt.title(f'Cost vs. Iteration number')
+plt.title('Cost vs. Iteration number')
 plt.grid(True)
 plt.show()
 
@@ -99,3 +100,69 @@ print("X training set size:", len(X_train))
 print("X testing set size:", len(X_test))
 print("y training set size:", len(y_train))
 print("y testing set size:", len(y_test))
+
+# Q2 Part D
+# 1
+np.random.seed(32)
+df = pd.read_csv('ford.csv')
+feat = 'mileage'
+output = 'price'
+
+X_init = df[[feat]].values
+y = df[output].values
+feat_mean = np.mean(X_init)
+feat_std = np.std(X_init)
+
+X_standard = (X_init - feat_mean) / feat_std
+
+m = len(y)
+X = np.column_stack([np.ones(m),X_standard])
+
+index = np.random.permutation(m)
+split = int(0.9 * m)
+train = index[:split]
+test = index[split:]
+
+X_train = X[train]
+X_test = X[test]
+y_train = y[train]
+y_test = y[test]
+
+alpha = 0.01 # same value I used before
+num_iters = 500 + (32 * 5)
+theta_init = np.array([0.0, 0.0])
+
+theta, cost_history = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+print("Theta_0:", theta[0])
+print("Theta_1:", theta[1])
+# 2
+# cost vs. iteration number
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history, linewidth=2)
+plt.xlabel('Iteration number')
+plt.ylabel('Cost')
+plt.title('Cost vs. Iteration number')
+plt.grid(True)
+plt.show()
+
+# regression line
+plt.figure(figsize=(10, 6))
+plt.scatter(X_init[train], y_train, alpha=0.5, color='blue', label='Training data')
+x_range = np.linspace(X_init.min(), X_init.max(), 100)
+x_range_standard = (x_range - feat_mean) / feat_std
+x_bias = np.column_stack([np.ones(len(x_range)), x_range_standard])
+y_pred = x_bias.dot(theta)
+
+plt.plot(x_range, y_pred, 'r-', linewidth=2, label='Regression line')
+plt.xlabel('Mileage - mi')
+plt.ylabel('Price - $')
+plt.title('Univariate Linear Regression')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+
+# Q2 Part E
+np.random.seed(32)
+df = pd.read_csv('ford.csv')
+feat = ['mileage','mpg']
+output = 'price'
