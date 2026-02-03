@@ -302,22 +302,22 @@ plt.title('Learning Rate 0.01')
 plt.grid(True, alpha=0.3)
 plt.show()
 # oscillating but converging
-alpha = 0.1
+alpha = 1.79
 theta3, cost_history3 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
 plt.figure(figsize=(10, 6))
 plt.plot(range(num_iters), cost_history3, linewidth=2)
 plt.xlabel('Iteration Number')
 plt.ylabel('Cost')
-plt.title('Learning Rate 0.1')
+plt.title('Learning Rate 1.79')
 plt.grid(True, alpha=0.3)
 plt.show()
 # diverging
-alpha = 1.0
+alpha = 2.0
 theta4, cost_history4 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
 plt.figure(figsize=(10, 6))
 plt.plot(range(num_iters), cost_history4, linewidth=2)
 plt.xlabel('Iteration Number')
 plt.ylabel('Cost')
-plt.title('Learning Rate 1.0')
+plt.title('Learning Rate 2.0')
 plt.grid(True, alpha=0.3)
 plt.show()
