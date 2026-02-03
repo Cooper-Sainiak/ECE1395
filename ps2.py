@@ -73,7 +73,14 @@ X_init = df[feat].values
 y = df[output].values
 feat_mean = np.mean(X_init,axis=0)
 feat_std = np.std(X_init,axis=0)
+
+print("Mileage Mean:", feat_mean[0])
+print("Mileage Std:", feat_std[0])
+print("MPG Mean:", feat_mean[1])
+print("MPG Std:", feat_std[1])
+
 X_standard = (X_init - feat_mean) / feat_std
+
 # 3
 m = len(y)
 X = np.column_stack([np.ones(m),X_standard])
@@ -85,5 +92,10 @@ test = index[split:]
 
 X_train = X[train]
 X_test = X[test]
-X_train = X[train]
-X_test = X[test]
+y_train = y[train]
+y_test = y[test]
+
+print("X training set size:", len(X_train))
+print("X testing set size:", len(X_test))
+print("y training set size:", len(y_train))
+print("y testing set size:", len(y_test))
