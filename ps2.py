@@ -252,3 +252,72 @@ mseUni = computeCost(X_test,y_test,theta_uni)
 print('Univariate Model (mileage only):', mseUni)
 print('Multivariate Gradient Descent:', mseGD)
 print('Multivariate Normal Equation:', mseNorm)
+
+# Q2 Part G
+np.random.seed(32)
+df = pd.read_csv('ford.csv')
+feat = ['mileage','mpg']
+output = 'price'
+
+X_init = df[feat].values
+y = df[output].values
+feat_mean = np.mean(X_init,axis=0)
+feat_std = np.std(X_init,axis=0)
+X_standard = (X_init - feat_mean) / feat_std
+
+m = len(y)
+X = np.column_stack([np.ones(m),X_standard])
+
+index = np.random.permutation(m)
+split = int(0.9 * m)
+train = index[:split]
+test = index[split:]
+
+X_train = X[train]
+X_test = X[test]
+y_train = y[train]
+y_test = y[test]
+
+num_iters = 300
+theta_init = np.zeros(3)
+
+# too small
+alpha = 0.001
+theta1, cost_history1 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history1, linewidth=2)
+plt.xlabel('Iteration Number')
+plt.ylabel('Cost')
+plt.title('Learning Rate 0.001')
+plt.grid(True, alpha=0.3)
+plt.show()
+# appropriate
+alpha = 0.01
+theta2, cost_history2 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history2, linewidth=2)
+plt.xlabel('Iteration Number')
+plt.ylabel('Cost')
+plt.title('Learning Rate 0.01')
+plt.grid(True, alpha=0.3)
+plt.show()
+# oscillating but converging
+alpha = 0.1
+theta3, cost_history3 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history3, linewidth=2)
+plt.xlabel('Iteration Number')
+plt.ylabel('Cost')
+plt.title('Learning Rate 0.1')
+plt.grid(True, alpha=0.3)
+plt.show()
+# diverging
+alpha = 1.0
+theta4, cost_history4 = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history4, linewidth=2)
+plt.xlabel('Iteration Number')
+plt.ylabel('Cost')
+plt.title('Learning Rate 1.0')
+plt.grid(True, alpha=0.3)
+plt.show()
