@@ -166,3 +166,89 @@ np.random.seed(32)
 df = pd.read_csv('ford.csv')
 feat = ['mileage','mpg']
 output = 'price'
+
+X_init = df[feat].values
+y = df[output].values
+feat_mean = np.mean(X_init,axis=0)
+feat_std = np.std(X_init,axis=0)
+X_standard = (X_init - feat_mean) / feat_std
+
+m = len(y)
+X = np.column_stack([np.ones(m),X_standard])
+
+index = np.random.permutation(m)
+split = int(0.9 * m)
+train = index[:split]
+test = index[split:]
+
+X_train = X[train]
+X_test = X[test]
+y_train = y[train]
+y_test = y[test]
+
+# Gradient descent
+alpha = 0.01
+num_iters = 750 + (32 * 5)
+theta_init = np.zeros(3)
+start_time = time.time()
+thetaGD, cost_history = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+GDtime = time.time() - start_time
+print('GD theta:', thetaGD)
+print('GD time:', GDtime)
+
+# Normal Equation
+start_time = time.time()
+thetaNorm = normalEqn(X_train,y_train)
+Ntime = time.time() - start_time
+print('Normal theta:', thetaNorm)
+print('Normal time:', Ntime)
+
+# cost vs. iteration number GD
+plt.figure(figsize=(10, 6))
+plt.plot(range(num_iters), cost_history, linewidth=2)
+plt.xlabel('Iteration number')
+plt.ylabel('Cost')
+plt.title('Cost vs. Iteration number')
+plt.grid(True)
+plt.show()
+
+# Q2 Part F
+mseGD = computeCost(X_test,y_test,thetaGD)
+mseNorm = computeCost(X_test,y_test,thetaNorm)
+
+df = pd.read_csv('ford.csv')
+feat = 'mileage'
+output = 'price'
+
+X_init_uni = df[[feat]].values
+y_uni = df[output].values
+feat_mean_uni = np.mean(X_init_uni)
+feat_std_uni = np.std(X_init_uni)
+
+X_standard_uni = (X_init_uni - feat_mean_uni) / feat_std_uni
+
+m = len(y_uni)
+X_uni = np.column_stack([np.ones(m),X_standard_uni])
+
+np.random.seed(32)
+index = np.random.permutation(m)
+split = int(0.9 * m)
+train_uni = index[:split]
+test_uni = index[split:]
+
+X_train = X_uni[train_uni]
+X_test = X_uni[test_uni]
+y_train = y_uni[train_uni]
+y_test = y_uni[test_uni]
+
+alpha = 0.01 # same value I used before
+num_iters = 750 + (32 * 5)
+theta_init = np.zeros(2)
+
+theta_uni, cost_history_uni = gradientDescent(X_train,y_train,theta_init,alpha,num_iters)
+
+mseUni = computeCost(X_test,y_test,theta_uni)
+
+print('Univariate Model (mileage only):', mseUni)
+print('Multivariate Gradient Descent:', mseGD)
+print('Multivariate Normal Equation:', mseNorm)
